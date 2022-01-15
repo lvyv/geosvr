@@ -16,7 +16,7 @@ const vectorSource = new VectorSource({
   format: new GeoJSON(),
   url: function (extent) {
     return (
-      'https://103.81.5.77:7443/geoserver/wfs?service=WFS&' +
+      'http://103.81.5.77:7441/geoserver/wfs?service=WFS&' +
       'version=1.1.0&request=GetFeature&typename=XCBASE:polygons&' +
       'outputFormat=application/json&srsname=EPSG:3857&' +
       'bbox=' +
@@ -40,7 +40,7 @@ const vector = new VectorLayer({
 
 const raster = new TileLayer({
   source: new TileWMS({
-    url: 'https://103.81.5.77:7443/geoserver/wms',
+    url: 'http://103.81.5.77:7441/geoserver/wms',
     params: {
       'FORMAT': format,
       'VERSION': '1.1.1',

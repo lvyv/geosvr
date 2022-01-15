@@ -4,14 +4,13 @@ import TileWMS from 'ol/source/TileWMS';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 
-
 var format = 'image/jpeg'
 const map = new Map({
   target: 'map',
   layers: [
     new TileLayer({
       source: new TileWMS({
-        url: 'https://103.81.5.77:7443/geoserver/wms',
+        url: 'http://103.81.5.77:7441/geoserver/wms',
         params: {
           'FORMAT': format,
           'VERSION': '1.1.1',

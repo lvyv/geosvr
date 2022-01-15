@@ -1,13 +1,13 @@
 import 'ol/ol.css';
 import {Circle, Fill, Style, Icon} from 'ol/style';
 import {Feature, Map, Overlay, View} from 'ol/index';
-import {TileWMS, Vector as VectorSource} from 'ol/source';
+import {TileWMS, Vector} from 'ol/source';
 import {Point} from 'ol/geom';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 
 
-const place1 = [11357737, 3279730];
-const place2 = [11357747, 3279842]
+const place1 = [11357747, 3279730];
+const place2 = [11357747, 3279930]
 
 const point1 = new Point(place1);
 const point2 = new Point(place2);
@@ -22,8 +22,8 @@ const iconFeature = new Feature({
 
 const iconStyle = new Style({
   image: new Icon({
-    anchor: [0.5, 46],
-    anchorXUnits: 'fraction',
+    anchor: [15, 50],
+    anchorXUnits: 'pixels',
     anchorYUnits: 'pixels',
     src: 'data/icon.png',
   }),
@@ -41,7 +41,7 @@ const map = new Map({
   layers: [
     new TileLayer({
       source: new TileWMS({
-        url: 'https://103.81.5.77:7443/geoserver/wms',
+        url: 'http://103.81.5.77:7441/geoserver/wms',
         params: {
           'FORMAT': format,
           'VERSION': '1.1.1',
@@ -55,7 +55,7 @@ const map = new Map({
       })
     }),
     new VectorLayer({
-      source: new VectorSource({
+      source: new Vector({
         features: [ptFeature, iconFeature],
       }),
       style: new Style({
@@ -69,12 +69,11 @@ const map = new Map({
 });
 
 const element = document.getElementById('popup');
-
 const popup = new Overlay({
   element: element,
   positioning: 'bottom-center',
   stopEvent: false,
-  offset: [0, -10],
+  offset: [0, -15],
 });
 map.addOverlay(popup);
 
@@ -82,8 +81,8 @@ function formatCoordinate(coordinate) {
   return `
     <table>
       <tbody>
-        <tr><th>lon</th><td>${coordinate[0].toFixed(2)}</td></tr>
-        <tr><th>lat</th><td>${coordinate[1].toFixed(2)}</td></tr>
+        <tr><th>经</th><td>${coordinate[0].toFixed(0)}</td></tr>
+        <tr><th>纬</th><td>${coordinate[1].toFixed(0)}</td></tr>
       </tbody>
     </table>`;
 }
@@ -94,7 +93,10 @@ map.on('moveend', function () {
   const center = view.getCenter();
   info.innerHTML = formatCoordinate(center);
 });
-
+// Close the popup when the map is moved
+map.on('movestart', function () {
+  $(element).popover('dispose');
+});
 map.on('click', function (event) {
   const feature = map.getFeaturesAtPixel(event.pixel)[0];
   if (feature) {
@@ -115,13 +117,9 @@ map.on('click', function (event) {
 
 map.on('pointermove', function (event) {
   if (map.hasFeatureAtPixel(event.pixel)) {
+    console.log(event);
     map.getViewport().style.cursor = 'pointer';
   } else {
     map.getViewport().style.cursor = 'inherit';
   }
-});
-
-// Close the popup when the map is moved
-map.on('movestart', function () {
-  $(element).popover('dispose');
 });

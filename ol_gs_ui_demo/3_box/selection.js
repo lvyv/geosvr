@@ -95,7 +95,7 @@ selectedFeatures.on(['add', 'remove'], function () {
 });
 
 function reverseGeocode(coords) {
-  const url = `https://103.81.5.77:7443/geoserver/wfs?service=WFS&version=1.1.0
+  const url = `http://103.81.5.77:7441/geoserver/wfs?service=WFS&version=1.1.0
                 &request=GetFeature&typeName=XCBASE:polygons&bbox=
                 ${coords[1]-0.01},${coords[0]-0.01},
                 ${coords[1]+0.01},${coords[0]+0.01}&outputformat=JSON`
